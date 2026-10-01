@@ -15,25 +15,22 @@ import {
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-// Frases randômicas para simular o recebimento de notificações temporárias
 const NOTIFICACOES_MENSAGENS = [
-  'Lembrete: Hidrate-se! 💧',
-  'Respire fundo e continue. 🌊',
-  'Dica: Faça uma pausa breve. ⏱️️',
-  'Mantenha uma boa postura! 🧘',
+  'Lembrete: BEBE AGUAAA 💧',
+  'Respire fundo e bora pra frente. 🌊',
+  'Da um tempo, e continue! ⏰',
+  'Arruma a coluna!! 🦴 ',
 ];
 
 export default function App() {
-  // --- ESTADOS DA APLICAÇÃO ---
   const [bio, setBio] = useState('');
   const [tempBio, setTempBio] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [receiveNotifications, setReceiveNotifications] = useState(false);
   const [currentNotification, setCurrentNotification] = useState<string | null>(null);
 
-  // --- LÓGICA DE UX: TEMPORIZADOR DE NOTIFICAÇÕES ---
   useEffect(() => {
-    let timerId: NodeJS.Timeout | null = null;
+    let timerId: ReturnType<typeof setInterval> | null = null;
 
     if (receiveNotifications) {
       const triggerNotification = () => {
@@ -41,10 +38,10 @@ export default function App() {
         setCurrentNotification(NOTIFICACOES_MENSAGENS[randomIndex]);
       };
 
-      triggerNotification(); // Exibe imediatamente ao ativar
-      timerId = setInterval(triggerNotification, 5000); // Repete a cada 5 segundos
+      triggerNotification();
+      timerId = setInterval(triggerNotification, 5000);
     } else {
-      setCurrentNotification(null); // Esconde ao desligar
+      setCurrentNotification(null);
     }
 
     return () => {
@@ -52,7 +49,6 @@ export default function App() {
     };
   }, [receiveNotifications]);
 
-  // --- LÓGICA DO MODAL ---
   const handleOpenModal = () => {
     setTempBio(bio);
     setIsModalOpen(true);
@@ -71,10 +67,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar barStyle="dark-content" backgroundColor="#f4f5f7" />
+        <StatusBar barStyle="dark-content" backgroundColor="#e8e8e2" />
 
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {/* SEÇÃO 1: FOTO & NOME */}
           <View style={styles.header}>
             <Image
               source={require('@/assets/images/perfil.jpeg')}
@@ -88,7 +83,6 @@ export default function App() {
             </Text>
           </View>
 
-          {/* SEÇÃO 2: BIO */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Bio</Text>
             <View style={styles.bioBox}>
@@ -101,36 +95,31 @@ export default function App() {
             </Pressable>
           </View>
 
-          {/* SEÇÃO 3: CONFIGURAÇÕES */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Configurações</Text>
 
-            {/* SWITCH: RECEBER NOTIFICAÇÕES */}
             <View style={styles.switchRow}>
               <Text style={styles.switchLabel}>Receber Notificações</Text>
               <Switch
                 value={receiveNotifications}
                 onValueChange={setReceiveNotifications}
-                trackColor={{ false: '#e2e8f0', true: '#93c5fd' }}
-                thumbColor={receiveNotifications ? '#2563eb' : '#f4f3f4'}
+                trackColor={{ false: '#93a3af', true: '#93c5fd' }}
+                thumbColor={receiveNotifications ? '#1d4ed8' : '#cdcdc3'}
               />
             </View>
           </View>
 
-          {/* SEÇÃO 4: BOTÃO PRINCIPAL */}
           <Pressable style={styles.primaryButtonFull} onPress={handleSaveMain}>
             <Text style={styles.primaryButtonFullText}>Salvar</Text>
           </Pressable>
         </ScrollView>
 
-        {/* COMPONENTE DE FEEDBACK DE UX: TOAST INFERIOR */}
         {receiveNotifications && currentNotification && (
           <View style={styles.toastBanner}>
             <Text style={styles.toastText}>{currentNotification}</Text>
           </View>
         )}
 
-        {/* COMPONENTE DE INTERAÇÃO DE UX: MODAL DE EDIÇÃO */}
         <Modal
           visible={isModalOpen}
           transparent={true}
@@ -148,7 +137,7 @@ export default function App() {
                 value={tempBio}
                 onChangeText={setTempBio}
                 placeholder="Digite sua biografia..."
-                placeholderTextColor="#6b7280"
+                placeholderTextColor="#71717a"
                 textAlignVertical="top"
               />
 
@@ -172,170 +161,200 @@ export default function App() {
   );
 }
 
-// --- ESTILIZAÇÃO FIXA ---
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f4f5f7',
+    backgroundColor: '#e8e8e2',
     paddingTop: Platform.OS === 'android' 
-      ? (StatusBar.currentHeight || 24) + 12 
+      ? (StatusBar.currentHeight || 24) + 8 
       : Platform.OS === 'web' 
-      ? 24 
-      : 12,
+      ? 20 
+      : 8,
   },
   scrollContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    paddingBottom: 90,
+    paddingHorizontal: 22,
+    paddingVertical: 20,
+    paddingBottom: 100,
   },
   header: {
     alignItems: 'center',
-    marginVertical: 16,
+    marginBottom: 24,
+    marginTop: 8,
   },
   avatar: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    marginBottom: 12,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 14,
+    borderWidth: 4,
+    borderColor: '#dfdfd7',
+    shadowColor: '#1d4ed8',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
   },
   userName: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: '800',
     textAlign: 'center',
-    color: '#111827',
+    color: '#18181b',
+    letterSpacing: -0.5,
   },
   userRole: {
     fontSize: 14,
-    color: '#6b7280',
-    marginTop: 4,
+    fontWeight: '500',
+    color: '#52525b',
+    marginTop: 2,
+    letterSpacing: 0.2,
   },
   card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    backgroundColor: '#dfdfd7',
+    borderRadius: 18,
+    padding: 20,
+    marginBottom: 18,
+    borderWidth: 1,
+    borderColor: '#d0d0c6',
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
+    shadowColor: '#18181b',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    color: '#111827',
+    fontSize: 15,
+    fontWeight: '700',
+    marginBottom: 14,
+    color: '#27272a',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
   },
   bioBox: {
     borderWidth: 1,
-    borderColor: '#e5e7eb',
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    padding: 12,
-    minHeight: 100,
-    marginBottom: 12,
+    borderColor: '#c4c4b8',
+    backgroundColor: '#d5d5cb',
+    borderRadius: 12,
+    padding: 14,
+    minHeight: 90,
+    marginBottom: 14,
   },
   bioText: {
     fontSize: 15,
-    lineHeight: 22,
-    color: '#111827',
+    lineHeight: 23,
+    color: '#18181b',
   },
   primaryButtonSmall: {
-    backgroundColor: '#2563eb',
-    paddingVertical: 10,
-    paddingHorizontal: 18,
-    borderRadius: 8,
+    backgroundColor: '#1d4ed8',
+    paddingVertical: 11,
+    paddingHorizontal: 20,
+    borderRadius: 10,
     alignSelf: 'flex-start',
   },
   primaryButtonText: {
     color: '#ffffff',
-    fontWeight: '600',
+    fontWeight: '700',
     fontSize: 14,
   },
   switchRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 4,
+    paddingVertical: 2,
   },
   switchLabel: {
     fontSize: 16,
-    color: '#111827',
+    fontWeight: '600',
+    color: '#27272a',
   },
   primaryButtonFull: {
-    backgroundColor: '#2563eb',
-    borderRadius: 8,
-    paddingVertical: 14,
+    backgroundColor: '#1d4ed8',
+    borderRadius: 12,
+    paddingVertical: 16,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 6,
+    shadowColor: '#1d4ed8',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 3,
   },
   primaryButtonFullText: {
     color: '#ffffff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
   toastBanner: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 24,
     left: 20,
     right: 20,
-    backgroundColor: '#0f172a',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
+    backgroundColor: '#09090b',
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 5,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
   },
   toastText: {
-    color: '#ffffff',
-    fontWeight: 'bold',
+    color: '#fafafa',
+    fontWeight: '600',
     fontSize: 14,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(9, 9, 11, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
   },
   modalContent: {
     width: '100%',
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 20,
-    elevation: 5,
+    backgroundColor: '#dfdfd7',
+    borderRadius: 20,
+    padding: 24,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
   },
   modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    color: '#111827',
+    fontSize: 19,
+    fontWeight: '700',
+    marginBottom: 14,
+    color: '#18181b',
   },
   modalInput: {
     borderWidth: 1,
-    borderColor: '#e5e7eb',
-    backgroundColor: '#ffffff',
-    color: '#111827',
-    borderRadius: 8,
-    padding: 12,
+    borderColor: '#c4c4b8',
+    backgroundColor: '#d5d5cb',
+    color: '#18181b',
+    borderRadius: 12,
+    padding: 14,
     fontSize: 15,
-    minHeight: 100,
-    marginBottom: 16,
+    minHeight: 110,
+    marginBottom: 18,
   },
   modalActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    gap: 10,
+    gap: 12,
   },
   secondaryButton: {
-    backgroundColor: '#e5e7eb',
-    paddingVertical: 10,
-    paddingHorizontal: 18,
-    borderRadius: 8,
+    backgroundColor: '#d5d5cb',
+    borderWidth: 1,
+    borderColor: '#b8b8ac',
+    paddingVertical: 11,
+    paddingHorizontal: 20,
+    borderRadius: 10,
   },
   secondaryButtonText: {
     fontWeight: '600',
-    color: '#374151',
+    color: '#3f3f46',
   },
 });
